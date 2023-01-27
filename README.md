@@ -1,8 +1,8 @@
-# fluid-macros
+# fluid-macro
 
 A macro that allows you to write long method call chains as a series of steps instead, with support for sub-scopes.
 
-# Basic Usage
+## Basic Usage
 
 ```rust
 let x = fluid!("123", {
@@ -21,7 +21,7 @@ This is equivalent to writing:
 let x = (("123".parse::<i32>().unwrap_or_default() - 100) * 2).clamp(5, 100).to_string();
 ```
 
-# (Motivating) Example
+## (Motivating) Example
 
 I was working on a little Visual Novel-like module for a game, with a DSL. I ended up creating a bunch of builders that modeled that DSL:
 
@@ -53,6 +53,6 @@ fluid!(SceneBuilder::new(), {
 })
 ```
 
-# Known limitations
+## Known limitations
 
 It's not very friendly to the IDE whilst writing. You will have to already know the names of methods you want to use. After compilation, however, symbol lookup and the like works fine.

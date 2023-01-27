@@ -1,0 +1,12 @@
+[package]
+name = "fluid-macro"
+authors = ["Phil L <narvius@gmail.com>"]
+version = "0.1.0"
+edition = "2021"
+description = "Write long method chains as a series of steps instead."
+readme = "README.md"
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]

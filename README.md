@@ -5,7 +5,8 @@ A macro that allows you to write long method call chains as a series of steps in
 # Basic Usage
 
 ```rust
-let x = fluid!(Some(123), {
+let x = fluid!("123", {
+    parse::<i32>();
     unwrap_or_default();
     clamp(5, 100);
     to_string();
@@ -15,7 +16,7 @@ let x = fluid!(Some(123), {
 This is equivalent to writing:
 
 ```rust
-let x = Some(123).unwrap_or_default().clamp(5, 100).to_string();
+let x = "123".parse::<i32>().unwrap_or_default().clamp(5, 100).to_string();
 ```
 
 # (Motivating) Example
@@ -112,16 +113,5 @@ let b = Builder::default()
 ```
 
 # Known limitations
-
-You can't turbofish. I'm sure this is a solveable issue, though.
-
-```rust
-let x = fluid!("123", {
-    parse::<i32>(); // will not compile!
-    unwrap_or_default();
-    clamp(5, 100);
-    to_string();
-})
-```
 
 It's not very friendly to the IDE whilst writing. You will have to already know the names of methods you want to use. After compilation, however, symbol lookup and the like works fine.

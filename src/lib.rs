@@ -9,7 +9,8 @@
 //!
 //! # fn main() {
 //!
-//! let x = fluid!(Some(123), {
+//! let x = fluid!("123", {
+//!     parse::<i32>();
 //!     unwrap_or_default();
 //!     clamp(5, 100);
 //!     to_string();
@@ -118,17 +119,6 @@
 //!
 //! # Known limitations
 //!
-//! You can't turbofish.
-//!
-//! ```ignore
-//! let x = fluid!("123", {
-//!     parse::<i32>(); // will not compile!
-//!     unwrap_or_default();
-//!     clamp(5, 100);
-//!     to_string();
-//! })
-//! ```
-//!
 //! It's not very friendly to the IDE whilst writing. You will have to already know the names
 //! of methods you want to use. After compilation, however, symbol lookup and the like works fine.
 
@@ -138,19 +128,22 @@
 macro_rules! fluid {
     // Base case: There's no more calls to combine, so just resolve to the final builder.
     ($expr:expr, {}) => { $expr };
+
     // Nesting case: Use this macro recursively in order to handle each nested branch.
-    ($expr:expr, { $block:ident($($args:expr),*) { $($children:tt)+ } $($next:tt)* }) => {
+    ($expr:expr, { $block:ident$(::<$($typeargs:ty),+>)?($($args:expr),*) { $($children:tt)+ } $($next:tt)* }) => {
         $crate::fluid!(
-            $expr.$block($($args,)* |b| $crate::fluid!(b, { $($children)+ })),
+            $expr.$block$(::<$($typeargs),+>)?($($args,)* |b| $crate::fluid!(b, { $($children)+ })),
             { $($next)* }
         )
     };
+
     // Expression-shaped calls.
     ($expr:expr, { [$($items:tt)+]; $($next:tt)* }) => {
         $crate::fluid!(($expr $($items)+), { $($next)*} )
     };
+
     // Default case: Take one line and turn it into a chained call.
-    ($expr:expr, { $command:ident($($args:expr),*); $($next:tt)* }) => {
-        $crate::fluid!($expr.$command($($args),*), { $($next)* })
+    ($expr:expr, { $command:ident$(::<$($typeargs:ty),+>)?($($args:expr),*); $($next:tt)* }) => {
+        $crate::fluid!($expr.$command$(::<$($typeargs),+>)?($($args),*), { $($next)* })
     };
 }

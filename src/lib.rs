@@ -6,9 +6,9 @@
 //! ```rust
 //! # #[macro_use] extern crate fluid_macro;
 //! # use fluid_macro::fluid;
-//!
+//! #
 //! # fn main() {
-//!
+//! #
 //! let x = fluid!("123", {
 //!     parse::<i32>();
 //!     unwrap_or_default();
@@ -17,7 +17,7 @@
 //! });
 //!
 //! assert_eq!(x, "100");
-//!
+//! #
 //! # }
 //! ```
 //!
@@ -37,7 +37,7 @@
 //! ```rust
 //! # #[macro_use] extern crate fluid_macro;
 //! # use fluid_macro::fluid;
-//!
+//! #
 //! struct Example(i32);
 //!
 //! impl Example {
@@ -53,15 +53,15 @@
 //! }
 //!
 //! # fn main() {
-//!     let x = fluid!(Example(0), {
-//!         add(15);
-//!         modify() {
-//!             clamp(20, 50);
-//!         }
-//!         add(15);
-//!     });
+//! let x = fluid!(Example(0), {
+//!     add(15);
+//!     modify() {
+//!         clamp(20, 50);
+//!     }
+//!     add(15);
+//! });
 //!
-//!     assert_eq!(x.0, 35);
+//! assert_eq!(x.0, 35);
 //! # }
 //! ```
 //!
@@ -94,15 +94,15 @@
 //! ```rust
 //! # #[macro_use] extern crate fluid_macro;
 //! # use fluid_macro::fluid;
-//!
+//! #
 //! # fn main() {
-//!     let x = fluid!(5i32, {
-//!         [+ 5];
-//!         [as u8];
-//!         to_string();
-//!     });
+//! let x = fluid!(5i32, {
+//!     [+ 5];
+//!     [as u8];
+//!     to_string();
+//! });
 //!
-//!     assert_eq!(x, "10");
+//! assert_eq!(x, "10");
 //! # }
 //! ```
 //!

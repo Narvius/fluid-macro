@@ -8,6 +8,8 @@ A macro that allows you to write long method call chains as a series of steps in
 let x = fluid!("123", {
     parse::<i32>();
     unwrap_or_default();
+    [- 100];
+    [* 2];
     clamp(5, 100);
     to_string();
 });
@@ -16,7 +18,7 @@ let x = fluid!("123", {
 This is equivalent to writing:
 
 ```rust
-let x = "123".parse::<i32>().unwrap_or_default().clamp(5, 100).to_string();
+let x = (("123".parse::<i32>().unwrap_or_default() - 100) * 2).clamp(5, 100).to_string();
 ```
 
 # (Motivating) Example
@@ -49,67 +51,6 @@ fluid!(SceneBuilder::new(), {
         }
     }
 })
-```
-
-# Enabling nested blocks
-
-Since the macro simply moves around the identifiers it is given, any method that matches after all transformations are done will automatically work. There is really only one assumption made: Blocks (like the `choice` call in the example above) are simply a **a one-argument closure as a final argument**. An example is given in `multiplied` below:
-
-```rust
-#[derive(Default)]
-struct Builder {
-    total: i32,
-}
-
-impl Builder {
-    fn add(mut self, amount: i32) -> Self {
-        self.total += amount;
-        self
-    }
-
-    fn multiplied(mut self, multiplier: i32, f: impl FnOnce(SubBuilder) -> SubBuilder) -> Self {
-        f(SubBuilder {
-            parent: &mut self,
-            multiplier,
-        });
-        self
-    }
-}
-
-struct SubBuilder<'a> {
-    parent: &'a mut Builder,
-    multiplier: i32,
-}
-
-impl SubBuilder<'_> {
-    fn add(mut self, amount: i32) -> Self {
-        self.parent.total += amount * self.multiplier;
-        self
-    }
-}
-```
-
-```rust
-let b = fluid!(Builder::default(), {
-    add(5);
-    multiplied(3) {
-        add(4);
-    }
-});
-
-assert_eq!(b.total, 17);
-```
-
-It can, of course, be any closure type--not just `impl FnOnce`.
-
-For completeness, the above macro invocation expands to the following:
-
-```rust
-let b = Builder::default()
-    .add(5)
-    .multiplied(3, |b| {
-        b.add(4)
-    });
 ```
 
 # Known limitations

@@ -86,6 +86,36 @@
 //! assert_eq!(x.0, 35)
 //! ```
 //!
+//! # Chaining in non-method things
+//!
+//! Although it looks a bit weird, you can write casts and operations with this syntax:
+//!
+//! ```rust
+//! # #[macro_use] extern crate fluid_macro;
+//! # use fluid_macro::fluid;
+//!
+//! # fn main() {
+//!     let x = fluid!(5i32, {
+//!         [+ 5];
+//!         [as u8];
+//!         to_string();
+//!     });
+//!
+//!     assert_eq!(x, "10");
+//! # }
+//! ```
+//!
+//! The entire chained expression so far will be placed in the first position of the partial
+//! expression in square brackets.
+//!
+//! The above expands to:
+//!
+//! ```rust
+//! let x = ((5i32 + 5) as u8).to_string();
+//!
+//! assert_eq!(x, "10");
+//! ```
+//!
 //! # Known limitations
 //!
 //! You can't turbofish.
@@ -114,6 +144,10 @@ macro_rules! fluid {
             $expr.$block($($args,)* |b| $crate::fluid!(b, { $($children)+ })),
             { $($next)* }
         )
+    };
+    // Expression-shaped calls.
+    ($expr:expr, { [$($items:tt)+]; $($next:tt)* }) => {
+        $crate::fluid!(($expr $($items)+), { $($next)*} )
     };
     // Default case: Take one line and turn it into a chained call.
     ($expr:expr, { $command:ident($($args:expr),*); $($next:tt)* }) => {

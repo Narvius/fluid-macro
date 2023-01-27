@@ -24,7 +24,7 @@
 //! This is equivalent to writing:
 //!
 //! ```rust
-//! let x = Some(123).unwrap_or_default().clamp(5, 100).to_string();
+//! let x = "123".parse::<i32>().unwrap_or_default().clamp(5, 100).to_string();
 //!
 //! assert_eq!(x, "100");
 //! ```

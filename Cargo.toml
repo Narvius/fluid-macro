@@ -3,9 +3,10 @@ name = "fluid-macro"
 authors = ["Phil L <narvius@gmail.com>"]
 version = "0.1.0"
 edition = "2021"
-description = "Write long method chains as a series of steps instead."
-readme = "README.md"
+description = "Write long method chains as a series of steps instead, and more!"
 license = "MIT"
+repository = "https://github.com/Narvius/fluid-macro"
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
